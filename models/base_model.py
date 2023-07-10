@@ -3,10 +3,26 @@ import datetime
 
 
 class BaseModel:
-    def __init__(self) -> None:
-        self.id = str(uuid4())
-        self.created_at = datetime.datetime.now()
-        self.updated_at = self.created_at
+    def __init__(self, *args, **kwargs) -> None:
+        if kwargs:
+            for key, value in kwargs.items():
+                if key == "__class__":
+                    continue
+                elif key == "created_at":
+                    value = datetime.datetime.strptime(value, "%Y-%m-%dT%H:%M:%S.%f")
+                elif key == "updated_at":
+                    value = datetime.datetime.strptime(value, "%Y-%m-%dT%H:%M:%S.%f")
+                if "id" not in kwargs.keys():
+                    self.id = uuid4()
+                if "created_at" not in kwargs.keys():
+                    self.created_at = datetime.datetime.now()
+                if "updated_at" not in kwargs.keys():
+                    self.updated_at = datetime.datetime.now()
+                setattr(self, key, value)
+        else:
+            self.id = str(uuid4())
+            self.created_at = datetime.datetime.now()
+            self.updated_at = self.created_at
 
     def __str__(self) -> str:
         class_name = self.__class__.__name__
