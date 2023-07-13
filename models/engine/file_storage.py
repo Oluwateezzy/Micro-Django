@@ -10,9 +10,9 @@ class FileStorage:
 
     def save(self):
         data = {}
-        for key, value in self.__objects.items():
-            data[key] = value.to_dict()
         with open(self.__file_path, 'a') as file:
+            for key, value in self.__objects.items():
+              data = "{}: {}".format(key, value.to_dict())
             json.dump(data, file)
 
     def new(self, obj):
